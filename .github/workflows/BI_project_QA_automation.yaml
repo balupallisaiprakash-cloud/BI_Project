@@ -24,6 +24,13 @@ jobs:
         run: |
           echo "User: $(whoami)"
           echo "Shell: $SHELL"
+          
+      - name: Ensure temp directories exist
+        run: |
+          mkdir -p /tmp/github-runner-tool-cache
+          mkdir -p /tmp/github-runner-temp
+          chmod 777 /tmp/github-runner-tool-cache
+          chmod 777 /tmp/github-runner-temp
 
       - name: Verify Python installed (fail fast if missing)
         run: |
