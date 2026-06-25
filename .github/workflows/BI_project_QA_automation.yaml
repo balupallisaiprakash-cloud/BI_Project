@@ -25,23 +25,23 @@ jobs:
           echo "User: $(whoami)"
           echo "Shell: $SHELL"
 
-      - name: Install pyenv
+      - name: Verify Python installed (fail fast if missing)
         run: |
-          brew update
-          brew install pyenv
+          echo "Runner user: $(whoami)"
+          echo "Shell: $SHELL"
+          echo "PATH: $PATH"
+          if ! command -v python3 >/dev/null 2>&1; then
+            echo "ERROR: python3 not found on runner. Please provision Python on the host."
+            exit 1
+          fi
+          echo "python3 -> $(which python3)"
+          python3 --version
 
-      - name: Install Python 3.12.2
-        run: |
-          arch -arm64 brew install openssl readline zlib xz
-          export PYENV_ROOT="$HOME/.pyenv"
-          export PATH="$PYENV_ROOT/bin:$PATH"
-          export LDFLAGS="-L$(brew --prefix openssl)/lib -L$(brew --prefix readline)/lib -L$(brew --prefix zlib)/lib"
-          export CPPFLAGS="-I$(brew --prefix openssl)/include -I$(brew --prefix readline)/include -I$(brew --prefix zlib)/include"
-          export PKG_CONFIG_PATH="$(brew --prefix openssl)/lib/pkgconfig:$(brew --prefix readline)/lib/pkgconfig:$(brew --prefix zlib)/lib/pkgconfig"
-          eval "$(pyenv init --path)"
-          eval "$(pyenv init -)"
-          arch -arm64 pyenv install 3.12.2 -s
-          pyenv global 3.12.2
+      - name: Use Python (pick up the installed interpreter)
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12.2'
+          check-latest: true
 
       - name: Checkout Repository
         uses: actions/checkout@v4
