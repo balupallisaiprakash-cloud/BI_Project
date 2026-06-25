@@ -37,12 +37,6 @@ jobs:
           echo "python3 -> $(which python3)"
           python3 --version
 
-      - name: Use Python (pick up the installed interpreter)
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12.2'
-          check-latest: true
-
       - name: Checkout Repository
         uses: actions/checkout@v4
 
